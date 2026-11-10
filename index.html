@@ -1,176 +1,401 @@
-<!DOCTYPE HTML>
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-  <title>Gautam Varma Datla</title>
-  
-  <meta name="author" content="Gautam Varma Datla">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <link rel="stylesheet" type="text/css" href="stylesheet.css">
-  <link rel="icon" type="image/png" href="">
+  <title>Gautam Varma Datla</title>
+  <meta name="author" content="Gautam Varma Datla">
+  <meta name="description" content="Gautam Varma Datla — AI Work Redesign Engineer at Strategic Education, Inc. AI safety, governance and interpretability research; creator of mcpsafetywarden; open-source contributor to pandas, Polars and LlamaIndex.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3CradialGradient id='g' cx='35%25' cy='30%25'%3E%3Cstop offset='0' stop-color='%23c9f9ff'/%3E%3Cstop offset='.45' stop-color='%237cf3ff'/%3E%3Cstop offset='1' stop-color='%236b4dd6'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css?v=31">
+  <link rel="modulepreload" href="vendor/three.module.min.js">
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.min.js" } }
+  </script>
 </head>
-
 <body>
-  <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-    <tr style="padding:0px">
-      <td style="padding:0px">
-        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-          <tr style="padding:0px">
-            <td style="padding:2.5%;width:63%;vertical-align:middle">
-              <p style="text-align:center">
-                <name>Gautam Varma Datla</name>
-              </p>
-              <p>
-                  I am a Msc Data Science graduate from the <a href="https://www.njit.edu/">New Jersey Institute of Technology (NJIT)</a>, with a Bachelor’s degree in Electronics and Communication Engineering from <a href="https://www.snu.edu.in/">Shiv Nadar University</a>. My research background has been primarily centered around interpretability, particularly in the domain of solar physics, where I worked on developing interpretable deep learning models for forecasting solar flares.
-              </p>
-              <p>
-                  In addition to my academic pursuits, I have gained practical experience working in industry at companies like <a href="https://www.audible.com/">Audible</a>, <a href="https://www.faire.com/">Faire</a>, <a href="https://precise-soft.com/">Precise Software Solutions</a>, and <a href="https://axiomio.com/">AxiomIO</a>. My primary research interests are centered around LLM robustness, safety, and alignment, with a strong focus on mechanistic interpretability.
-              </p>
-              <p style="text-align:center">
-                <a href="mailto:gvd6@njit.edu">Email</a> &nbsp/&nbsp
-                <a href="https://scholar.google.com/citations?user=4hY7vjsAAAAJ&hl=en">Google Scholar</a> &nbsp/&nbsp
-                <a href="https://github.com/gautamvarmadatla">Github</a> &nbsp/&nbsp
-                <a href="https://www.linkedin.com/in/gautam-varma-datla-38580a218/">LinkedIn</a> &nbsp
-              </p>
-            </td>
-            <td style="padding:2.5%;width:40%;max-width:40%">
-              <a href="images/gautam.png">
-                <img style="width:100%;max-width:100%;border-radius:50%;" alt="profile photo" src="images/gautam.png" class="hoverZoomLink">
-              </a>
-            </td>
-          </tr>
-        </tbody></table>
-        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr>
-              <hr>
-            <td style="padding:20px;width:100%;vertical-align:middle">
-              <heading>Publications</heading>
-            </td>
-          </tr>
-        </tbody></table>
-        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-          <tr>
-            <td style="padding:20px;width:75%;vertical-align:top">
-              <a href="https://ieeexplore.ieee.org/abstract/document/10356569/">
-              <papertitle>An interpretable lstm network for solar flare prediction</papertitle>
-              </a>
-              <br>
-              <strong>IEEE International Conference on Tools with Artificial Intelligence (ICTAI), 2023 &nbsp;</strong>
-              <br>
-              <u>Gautam Datla</u>, 
-              Haodi Jiang, 
-              Jason TL Wang
-            </td>
-          </tr>
 
-          <tr>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://drive.google.com/file/d/19ds5EqCX9V6y2F6M64FCg1opFoI20O9x/view">
-                <papertitle>Towards Explainable CME Forecasting with Attention-based Sequential Network</papertitle>
-              </a>
-              <br>
-              <strong>arXiv preprint - Under review &nbsp; </strong></font>
-              <br>
-              <u>Gautam Datla</u>, 
-              Jason TL Wang
-            </td>
-          </tr>
+  <!-- WebGL orb lives behind everything -->
+  <canvas id="orb" aria-hidden="true"></canvas>
+  <div class="orb-fallback" aria-hidden="true"></div>
+  <div class="scrim" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
 
-        </tbody></table>
-        <hr>
-        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-        <tbody>
-          <tr>
-            <td style="padding:20px;width:100%;vertical-align:middle">
-              <heading>Research Experience</heading>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-        <tbody>
-          <tr>
-            <td style="padding:20px;width:75%;vertical-align:top">
-               <a href="https://drive.google.com/file/d/16hvaABCAcbqWZ7RE3loNp_ny_tWp2KT_/view">
-                <papertitle>Design and Optimization of Power- and Area-Efficient Memristor-Based Leaky Integrate-and-Fire (LIF) Neurons for Neuromorphic Computing</papertitle>
-              </a>
-              <br>
-              Shiv Nadar University
-              <br>
-              <em>Datla, G.V.*, Vidhip V.*, & Amitabh C.</em>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:20px;width:75%;vertical-align:top">
-                             <a href="https://drive.google.com/file/d/1biCZQ82Gsj46jj9n_0RESNbUOg2P8WlA/view">
-                <papertitle>Comprehensive Performance Analysis of IoT-Based Smart Devices: Exploring Compression and Routing Protocols Using the COOJA Network Simulator</papertitle>
-                             </a>
-              <br>
-              Shiv Nadar University
-              <br>
-              <em>Chandra H.*, Datla, G.V.*, & Rohit Singh</em>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <hr>
-        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-          <tr>
-          <td style="padding:20px;width:100%;vertical-align:middle">
-            <heading>Work Experience</heading>
-          </td>
-        </tr>
-      </tbody></table>
-  
-      
-<table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-  <tbody>
-    <tr>
-      <td style="padding:10px;width:75%;vertical-align:top">
-        &nbsp;&nbsp;&nbsp; <a href="https://www.faire.com/"><span style="font-size: 1.17em; font-weight: bold;">Faire</span></a>
-        <br>
-        &nbsp;&nbsp;&nbsp; <strong>Data science intern</strong> | May 2024 - August 2024
-        <br>
-      </td>
-    </tr>
-    <tr>
-      <td style="padding:10px;width:75%;vertical-align:top">
-        &nbsp;&nbsp;&nbsp; <a href="https://www.audible.com/"><span style="font-size: 1.17em; font-weight: bold;">Audible, an Amazon company</span></a>
-        <br>
-        &nbsp;&nbsp;&nbsp; <strong>Data science research intern</strong> | September 2023 - December 2023    
-      </td>   
-    </tr>
-    <tr>
-      <td style="padding:10px;width:75%;vertical-align:top">
-        &nbsp;&nbsp;&nbsp; <a href="https://precise-soft.com/"><span style="font-size: 1.17em; font-weight: bold;">Precise Software Solutions</span></a>  
-        <br>
-        &nbsp;&nbsp;&nbsp; <strong>Machine learning intern</strong> | June 2023 - August 2023
-      </td>
-    </tr>
-    <tr>
-      <td style="padding:10px;width:75%;vertical-align:top">          
-        &nbsp;&nbsp;&nbsp; <a href="https://www.njit.edu/"><span style="font-size: 1.17em; font-weight: bold;">New Jersey Institute of Technology (NJIT) & NSF</span></a>
-        <br>
-        &nbsp;&nbsp;&nbsp; <strong>Graduate research assistant</strong> | January 2023 - May 2023
-      </td>
-    </tr>
-    <tr>
-      <td style="padding:10px;width:75%;vertical-align:top">
-        &nbsp;&nbsp;&nbsp; <a href="https://www.njit.edu/"><span style="font-size: 1.17em; font-weight: bold;">New Jersey Institute of Technology (NJIT)</span></a>
-        <br>
-        &nbsp;&nbsp;&nbsp; <strong>Graduate teaching assistant</strong> | Jan 2022 - May 2022
-      </td>
-    </tr>
-    <tr>
-      <td style="padding:10px;width:75%;vertical-align:top">
-        &nbsp;&nbsp;&nbsp; <a href="https://axiomio.com/"><span style="font-size: 1.17em; font-weight: bold;">AxiomIO IT Services</span></a>
-        <br>
-        &nbsp;&nbsp;&nbsp; <strong>Data analyst intern</strong> | July 2021 - December 2021
-      </td>
-    </tr>
-  </tbody>
-</table>
-<br>
-      <hr>
+  <!-- ============ Nav ============ -->
+  <header class="nav">
+    <a href="#home" class="nav-logo" data-magnetic>GVD<span>.</span></a>
+    <nav class="nav-links" id="nav-links">
+      <a href="#about">About</a>
+      <a href="#research">Research</a>
+      <a href="#opensource">Open Source</a>
+      <a href="#experience">Experience</a>
+      <a href="#service">Service</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ Hero ============ -->
+    <section id="home" class="hero" data-section="home" data-index="00">
+      <div class="hero-inner">
+        <h1 class="hero-name">
+          <span class="scramble" data-text="Gautam">Gautam</span>
+          <span class="scramble" data-text="Varma">Varma</span>
+          <span class="scramble outline" data-text="Datla.">Datla.</span>
+        </h1>
+        <p class="hero-role reveal">
+          AI Work Redesign Engineer building
+          <span class="rotator" id="rotator">safer AI agents</span>
+        </p>
+        <p class="hero-sub reveal">
+          <span>Agentic AI at <a href="https://www.strategiceducation.com/">Strategic Education, Inc.</a></span>
+          <span>AI safety, governance &amp; interpretability research</span>
+          <span>Creator of <a href="https://github.com/gautamvarmadatla/mcpsafetywarden">mcpsafetywarden</a></span>
+        </p>
+        <div class="hero-cta reveal">
+          <a href="#research" class="btn btn-solid" data-magnetic>Explore my work</a>
+          <a href="#contact" class="btn btn-ghost" data-magnetic>Get in touch</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ About ============ -->
+    <section id="about" class="section" data-section="about" data-index="01">
+      <div class="section-head reveal">
+        <span class="mono idx">01</span>
+        <h2>About</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p class="lead">I build AI systems that act, and the guardrails that keep them honest.</p>
+          <p>
+            At <a href="https://www.strategiceducation.com/">Strategic Education, Inc.</a> (NASDAQ: STRA) I'm on the Enterprise Work Redesign &amp; AI Prototyping team, redesigning higher-ed and enterprise shared-services workflows with agentic AI.
+          </p>
+          <p>
+            My industry experience spans OCR and document parsing, recommendation and personalization systems, and agentic AI for education and legal workflows.
+          </p>
+          <p>
+            My research sits at the intersection of <em>AI safety, governance and interpretability</em>, turning written policy into executable rules, making forecasting models explain themselves, and securing the tool layer that AI agents depend on.
+          </p>
+        </div>
+        <div class="portrait tilt reveal">
+          <img src="images/gautam.webp?v=2" alt="Gautam Varma Datla" loading="lazy">
+        </div>
+        <div class="edu card reveal">
+          <div class="card-label">education</div>
+          <ul>
+            <li><span class="edu-deg">MS in Data Science</span><a href="https://www.njit.edu/">New Jersey Institute of Technology (NJIT)</a></li>
+            <li><span class="edu-deg">B.Tech in Electronics &amp; Communication Engineering</span><a href="https://www.snu.edu.in/">Shiv Nadar University</a></li>
+          </ul>
+        </div>
+        <div class="news card reveal">
+          <div class="card-label">latest</div>
+          <ul>
+            <li><span class="mono">2026.05</span> <span>Named to the founding team of the AI Work Redesign Office (“the Hub”) at Strategic Education.</span></li>
+            <li><span class="mono">2026.04</span> <span>Featured in <a href="https://aijourn.com/gautam-varma-datla-is-working-to-make-ai-safer-before-it-gets-more-powerful/"><em>The AI Journal</em></a>.</span></li>
+            <li><span class="mono">2026.01</span> <span>Oral talk at the AAAI-26 AIGOV workshop, Singapore.</span></li>
+            <li><span class="mono">2025.12</span> <span>Two papers at IEEE BigData 2025 workshops, Macau.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Research ============ -->
+    <section id="research" class="section" data-section="research" data-index="02">
+      <div class="section-head reveal">
+        <span class="mono idx">02</span>
+        <h2>Research</h2>
+      </div>
+      <div class="filters reveal" role="tablist" aria-label="Filter publications">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="first">First author</button>
+        <button class="chip" data-filter="llm">LLMs &amp; governance</button>
+        <button class="chip" data-filter="xai">Interpretable ML</button>
+        <button class="chip" data-filter="ieee">IEEE published</button>
+      </div>
+      <div class="pubs">
+        <article class="pub card tilt reveal" data-tags="first llm">
+          <div class="pub-top mono"><span class="badge hot">Oral</span><span>AAAI-26 · AIGOV · Singapore</span><span>2026</span></div>
+          <h3><a href="https://arxiv.org/abs/2512.04408">Executable Governance for AI: Translating Policies into Rules Using LLMs</a></h3>
+          <p class="authors"><b>Gautam Varma Datla</b>, Anudeep Vurity, Tejaswani Dash, Tazeem Ahmad, Mohd Adnan, Saima Rafi</p>
+          <div class="pub-links mono"><a href="https://arxiv.org/abs/2512.04408">arXiv ↗</a><a href="https://github.com/gautamvarmadatla/Policy-Tests-P2T-for-operationalizing-AI-governance">code &amp; data ↗</a></div>
+        </article>
+        <article class="pub card tilt reveal" data-tags="ieee xai">
+          <div class="pub-top mono"><span class="badge">IEEE</span><span>BigData 2025 · Workshop · Macau</span><span>2025</span></div>
+          <h3><a href="https://doi.org/10.1109/BigData66926.2025.11400958">Residual GRU+MHSA: A Lightweight Hybrid Recurrent Attention Model for Cardiovascular Disease Detection</a></h3>
+          <p class="authors">Tejaswani Dash, <b>Gautam Datla</b>, Anudeep Vurity, Tazeem Ahmad, Mohd Adnan, Saima Rafi, Saisha Patro, Saina Patro</p>
+          <div class="pub-links mono"><a href="https://doi.org/10.1109/BigData66926.2025.11400958">IEEE ↗</a><a href="https://arxiv.org/abs/2512.14563">arXiv ↗</a></div>
+        </article>
+        <article class="pub card tilt reveal" data-tags="ieee llm">
+          <div class="pub-top mono"><span class="badge">IEEE</span><span>BigData 2025 · LLMs4All · Macau</span><span>2025</span></div>
+          <h3><a href="https://doi.org/10.1109/BIGDATA66926.2025.11401484">PolyPersona: Persona-Grounded LLM for Synthetic Survey Responses</a></h3>
+          <p class="authors">Tejaswani Dash, Dinesh Karri, Anudeep Vurity, <b>Gautam Datla</b>, Tazeem Ahmad, Saima Rafi, Rohith Tangudu</p>
+          <div class="pub-links mono"><a href="https://doi.org/10.1109/BIGDATA66926.2025.11401484">IEEE ↗</a><a href="https://arxiv.org/abs/2512.14562">arXiv ↗</a></div>
+        </article>
+        <article class="pub card tilt reveal" data-tags="first ieee xai">
+          <div class="pub-top mono"><span class="badge">IEEE</span><span>ICTAI · Atlanta</span><span>2023</span></div>
+          <h3><a href="https://ieeexplore.ieee.org/abstract/document/10356569/">An Interpretable LSTM Network for Solar Flare Prediction</a></h3>
+          <p class="authors"><b>Gautam Datla</b>, Haodi Jiang, Jason T. L. Wang</p>
+          <div class="pub-links mono"><a href="https://ieeexplore.ieee.org/abstract/document/10356569/">IEEE ↗</a></div>
+        </article>
+        <article class="pub card tilt reveal" data-tags="first xai">
+          <div class="pub-top mono"><span class="badge dim">Preprint</span><span>Space weather</span><span>—</span></div>
+          <h3><a href="https://drive.google.com/file/d/19ds5EqCX9V6y2F6M64FCg1opFoI20O9x/view">Towards Explainable CME Forecasting with Attention-based Sequential Network</a></h3>
+          <p class="authors"><b>Gautam Datla</b>, Jason T. L. Wang</p>
+          <div class="pub-links mono"><a href="https://drive.google.com/file/d/19ds5EqCX9V6y2F6M64FCg1opFoI20O9x/view">PDF ↗</a></div>
+        </article>
+      </div>
+      <details class="undergrad reveal">
+        <summary class="mono">+ undergraduate research</summary>
+        <ul>
+          <li><a href="https://drive.google.com/file/d/16hvaABCAcbqWZ7RE3loNp_ny_tWp2KT_/view">Design and Optimization of Power- and Area-Efficient Memristor-Based Leaky Integrate-and-Fire (LIF) Neurons for Neuromorphic Computing</a> <span class="mono">· Shiv Nadar University</span></li>
+          <li><a href="https://drive.google.com/file/d/1biCZQ82Gsj46jj9n_0RESNbUOg2P8WlA/view">Comprehensive Performance Analysis of IoT-Based Smart Devices: Exploring Compression and Routing Protocols Using the COOJA Network Simulator</a> <span class="mono">· Shiv Nadar University</span></li>
+        </ul>
+      </details>
+    </section>
+
+    <!-- ============ Open source ============ -->
+    <section id="opensource" class="section" data-section="opensource" data-index="03">
+      <div class="section-head reveal">
+        <span class="mono idx">03</span>
+        <h2>Open Source</h2>
+      </div>
+      <div class="stats reveal">
+        <div class="stat"><span class="num" data-count="52">0</span><span class="mono">bugs reported</span></div>
+        <div class="stat"><span class="num" data-count="39">0</span><span class="mono">PRs merged</span></div>
+        <div class="stat"><span class="num" data-count="12">0</span><span class="mono">releases shipped</span></div>
+        <div class="stat"><span class="num" data-count="74" data-suffix="K+">0</span><span class="mono">mcpsafetywarden downloads (PyPI + Docker)</span></div>
+        <div class="stat"><span class="num" data-prefix="Top " data-count="5" data-suffix="%">0</span><span class="mono">of MCP servers · #988 of 22,074 on PulseMCP</span></div>
+      </div>
+      <p class="stats-note mono reveal">bugs, PRs and releases counted across pandas, Polars &amp; LlamaIndex · downloads and rank are for mcpsafetywarden</p>
+
+      <div class="oss-grid">
+        <article class="oss-feature card tilt reveal">
+          <div class="card-label">creator &amp; maintainer</div>
+          <h3><a href="https://github.com/gautamvarmadatla/mcpsafetywarden">mcpsafetywarden</a></h3>
+          <p>
+            AI agents trust the label an MCP tool gives itself, never its behavior. mcpsafetywarden is the checkpoint between agent and server. It profiles tool behavior, blocks destructive calls, scans responses, audits server source, and re-verifies on every call that nothing has changed.
+          </p>
+          <div class="term mono" aria-hidden="true">
+            <div><span class="p">$</span> pip install mcpsafetywarden</div>
+            <div class="t" id="term-lines"></div>
+          </div>
+          <div class="mini-stats">
+            <a class="mini" href="https://pepy.tech/projects/mcpsafetywarden"><span class="num" data-count="67" data-suffix="K+">0</span><span class="mono">PyPI downloads</span></a>
+            <a class="mini" href="https://hub.docker.com/r/gautamdatla1999/mcpsafetywarden"><span class="num" data-count="6.7" data-suffix="K+" data-decimals="1">0</span><span class="mono">Docker pulls</span></a>
+            <a class="mini" href="https://pypi.org/project/mcpsafetywarden/#history"><span class="num" data-count="76">0</span><span class="mono">versions shipped</span></a>
+          </div>
+          <div class="pub-links mono"><a href="https://github.com/gautamvarmadatla/mcpsafetywarden">GitHub ↗</a><a href="https://pypi.org/project/mcpsafetywarden/">PyPI ↗</a><a href="https://hub.docker.com/r/gautamdatla1999/mcpsafetywarden">Docker Hub ↗</a></div>
+        </article>
+
+        <div class="oss-list">
+          <a class="oss-item card reveal" href="https://github.com/pandas-dev/pandas/pulls?q=is%3Apr+author%3Agautamvarmadatla+is%3Amerged">
+            <span class="oss-name">pandas</span><span class="mono">data analysis · critical &amp; high-impact finds · release-note credits</span><span class="arrow">↗</span>
+          </a>
+          <a class="oss-item card reveal" href="https://github.com/pola-rs/polars/pulls?q=is%3Apr+author%3Agautamvarmadatla+is%3Amerged">
+            <span class="oss-name">Polars</span><span class="mono">query engine · 1 P-critical + 7 P-high finds · release-note credits</span><span class="arrow">↗</span>
+          </a>
+          <a class="oss-item card reveal" href="https://github.com/run-llama/llama_index/pulls?q=is%3Apr+author%3Agautamvarmadatla+is%3Amerged">
+            <span class="oss-name">LlamaIndex</span><span class="mono">agents &amp; RAG · critical &amp; high-impact finds · release-note credits</span><span class="arrow">↗</span>
+          </a>
+          <a class="oss-item card reveal" href="https://github.com/google/adk-python/pull/4838">
+            <span class="oss-name">Google ADK</span><span class="mono">agent development kit</span><span class="arrow">↗</span>
+          </a>
+          <a class="oss-item card reveal" href="https://github.com/scikit-learn/scikit-learn/pull/32939">
+            <span class="oss-name">scikit-learn</span><span class="mono">test stability</span><span class="arrow">↗</span>
+          </a>
+          <p class="oss-blurb reveal">Hunted down bugs hiding in released versions of libraries with <b>800M+ monthly downloads</b>. Silent wrong answers, vanishing rows and corrupted values that raised no error and had gone unnoticed are now fixed at the source for every user who upgrades. One fix alone cut a production pipeline from <b>3–4 hours to under 45 minutes</b>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Experience ============ -->
+    <section id="experience" class="section" data-section="experience" data-index="04">
+      <div class="section-head reveal">
+        <span class="mono idx">04</span>
+        <h2>Experience</h2>
+      </div>
+      <ol class="timeline">
+        <li class="tl reveal open">
+          <button class="tl-head" aria-expanded="true">
+            <span class="tl-date mono">2024.11 — now</span>
+            <span class="tl-org">Strategic Education, Inc.</span>
+            <span class="tl-role">AI Work Redesign Engineer · Data Scientist</span>
+            <span class="tl-plus" aria-hidden="true"></span>
+          </button>
+          <div class="tl-body"><div>
+            <p><b>AI Work Redesign Engineer</b> <span class="mono">2026.06 — now</span><br>Redesigning higher-ed and enterprise shared-services workflows using agentic AI (Strayer, Capella, Torrens, Workforce Edge, Sophia).</p>
+            <p><b>Data Scientist</b> <span class="mono">2024.11 — 2026.06</span><br>Lead and student prioritization ML models, reporting and institutional research workflows (Enterprise Analytics).</p>
+            <a class="mono" href="https://www.strategiceducation.com/">strategiceducation.com ↗</a>
+          </div></div>
+        </li>
+        <li class="tl reveal">
+          <button class="tl-head" aria-expanded="false">
+            <span class="tl-date mono">2024.09 — 2024.11</span>
+            <span class="tl-org">Informatik Data Solutions</span>
+            <span class="tl-role">AI Engineer Intern</span>
+            <span class="tl-plus" aria-hidden="true"></span>
+          </button>
+          <div class="tl-body"><div>
+            <p>Demand forecasting model and agentic workflows for convenience stores.</p>
+            <a class="mono" href="https://www.informatikinc.com/">informatikinc.com ↗</a>
+          </div></div>
+        </li>
+        <li class="tl reveal">
+          <button class="tl-head" aria-expanded="false">
+            <span class="tl-date mono">2024.05 — 2024.08</span>
+            <span class="tl-org">Faire</span>
+            <span class="tl-role">Data Scientist Intern</span>
+            <span class="tl-plus" aria-hidden="true"></span>
+          </button>
+          <div class="tl-body"><div>
+            <p>Ranking and personalization on the Search &amp; Discovery team, including personalization relevance measurement and the Brand Page Ranker.</p>
+            <a class="mono" href="https://www.faire.com/">faire.com ↗</a>
+          </div></div>
+        </li>
+        <li class="tl reveal">
+          <button class="tl-head" aria-expanded="false">
+            <span class="tl-date mono">2024.04 — 2024.05</span>
+            <span class="tl-org">Accentuate IT Solutions</span>
+            <span class="tl-role">Data Scientist Intern</span>
+            <span class="tl-plus" aria-hidden="true"></span>
+          </button>
+          <div class="tl-body"><div>
+            <p>Enterprise chatbot for operations and ETL data monitoring.</p>
+            <a class="mono" href="https://aitslc.com/clients/">aitslc.com ↗</a>
+          </div></div>
+        </li>
+        <li class="tl reveal">
+          <button class="tl-head" aria-expanded="false">
+            <span class="tl-date mono">2023.09 — 2023.12</span>
+            <span class="tl-org">Audible, an Amazon company</span>
+            <span class="tl-role">Data Scientist Intern</span>
+            <span class="tl-plus" aria-hidden="true"></span>
+          </button>
+          <div class="tl-body"><div>
+            <p>Candidate generation and ranking pipelines on the Product &amp; Insights recommender systems team for the “Coming Soon” carousel, launched on the Audible homepage for U.S. customers.</p>
+            <a class="mono" href="https://www.audible.com/">audible.com ↗</a>
+          </div></div>
+        </li>
+        <li class="tl reveal">
+          <button class="tl-head" aria-expanded="false">
+            <span class="tl-date mono">2023.06 — 2023.08</span>
+            <span class="tl-org">Precise Software Solutions</span>
+            <span class="tl-role">Machine Learning Engineer Intern</span>
+            <span class="tl-plus" aria-hidden="true"></span>
+          </button>
+          <div class="tl-body"><div>
+            <p>OCR, image captioning and key information extraction for automated document parsers built for accessibility and compliance (Section 508 / WCAG 2.1).</p>
+            <a class="mono" href="https://precise-soft.com/">precise-soft.com ↗</a>
+          </div></div>
+        </li>
+        <li class="tl reveal">
+          <button class="tl-head" aria-expanded="false">
+            <span class="tl-date mono">2023.01 — 2023.05</span>
+            <span class="tl-org">National Science Foundation @ NJIT</span>
+            <span class="tl-role">Machine Learning Researcher</span>
+            <span class="tl-plus" aria-hidden="true"></span>
+          </button>
+          <div class="tl-body"><div>
+            <p>Explainable / interpretable ML for space-weather research (NASA projects on solar flare and CME forecasting).</p>
+            <a class="mono" href="https://www.nsf.gov/">nsf.gov ↗</a>
+          </div></div>
+        </li>
+        <li class="tl reveal">
+          <button class="tl-head" aria-expanded="false">
+            <span class="tl-date mono">2022.01 — 2022.05</span>
+            <span class="tl-org">New Jersey Institute of Technology</span>
+            <span class="tl-role">Graduate Teaching Assistant</span>
+            <span class="tl-plus" aria-hidden="true"></span>
+          </button>
+          <div class="tl-body"><div>
+            <a class="mono" href="https://www.njit.edu/">njit.edu ↗</a>
+          </div></div>
+        </li>
+        <li class="tl reveal">
+          <button class="tl-head" aria-expanded="false">
+            <span class="tl-date mono">2021.07 — 2021.12</span>
+            <span class="tl-org">Axiom</span>
+            <span class="tl-role">Data Analyst</span>
+            <span class="tl-plus" aria-hidden="true"></span>
+          </button>
+          <div class="tl-body"><div>
+            <p>Cloud migration, database management and business intelligence.</p>
+            <a class="mono" href="https://axiomio.com/">axiomio.com ↗</a>
+          </div></div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ Service ============ -->
+    <section id="service" class="section" data-section="service" data-index="05">
+      <div class="section-head reveal">
+        <span class="mono idx">05</span>
+        <h2>Service</h2>
+      </div>
+      <div class="service-grid">
+        <div class="card reveal">
+          <div class="card-label">journal reviewer</div>
+          <p class="big">ACM Transactions on Intelligent Systems and Technology <span class="mono">(TIST)</span></p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">program committee</div>
+          <p class="big">TRUST-AI Workshop @ ECAI 2025</p>
+        </div>
+        <div class="card wide reveal">
+          <div class="card-label">workshop reviewer</div>
+          <div class="tags">
+            <span>WCUA @ ICML 2025</span>
+            <span>MUGen @ ICML 2025</span>
+            <span>MoFA @ ICML 2025</span>
+            <span>LatinX in AI @ ICML 2025</span>
+            <span>LatinX in AI @ ICML 2026</span>
+            <span>AI-SCI @ ECML PKDD 2025</span>
+            <span>AIDD @ ICANN 2025</span>
+            <span>AI4CNI @ AAMAS 2026</span>
+            <span>Actionable Interpretability @ COLM 2026</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Contact ============ -->
+    <section id="contact" class="section contact" data-section="contact" data-index="06">
+      <div class="section-head reveal">
+        <span class="mono idx">06</span>
+        <h2>Contact</h2>
+      </div>
+      <h3 class="contact-big reveal">Let's build AI<br>that <span class="grad">deserves trust.</span></h3>
+      <div class="contact-links reveal">
+        <a href="mailto:gvd6@njit.edu" class="btn btn-solid" data-magnetic>Email</a>
+        <a href="https://scholar.google.com/citations?user=4hY7vjsAAAAJ&hl=en" class="btn btn-ghost" data-magnetic>Google Scholar</a>
+        <a href="https://openreview.net/profile?id=~Gautam_Varma_Datla1" class="btn btn-ghost" data-magnetic>OpenReview</a>
+        <a href="https://github.com/gautamvarmadatla" class="btn btn-ghost" data-magnetic>GitHub</a>
+        <a href="https://www.linkedin.com/in/gautam-varma-datla-38580a218/" class="btn btn-ghost" data-magnetic>LinkedIn</a>
+      </div>
+      <footer class="foot mono">
+        <span>© 2026 Gautam Varma Datla</span>
+        <span>rendered with WebGL</span>
+      </footer>
+    </section>
+  </main>
+
+  <!-- ============ Command palette ============ -->
+  <div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="Command palette" hidden>
+    <div class="palette-box">
+      <input id="palette-input" class="mono" type="text" placeholder="Type a command or search…" autocomplete="off" spellcheck="false">
+      <ul id="palette-list" role="listbox"></ul>
+      <div class="palette-foot mono"><span>↑↓ navigate</span><span>↵ open</span><span>esc close</span></div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js?v=31"></script>
 </body>
 </html>
