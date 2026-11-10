@@ -167,14 +167,19 @@ async function initOrb() {
 
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: (window.devicePixelRatio || 1) < 1.5, alpha: false, powerPreference: 'high-performance' });
   } catch (e) {
     console.warn('WebGL unavailable, using CSS fallback', e);
     document.body.classList.add('no-webgl');
     return null;
   }
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  renderer.setPixelRatio(dpr);
+  // Hero renders sharp (capped at 1.5x); behind sections the orb renders at a tiny
+  // resolution and gets upscaled, which blurs it for free instead of a CSS blur filter.
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  let heroRatio = dpr;
+  const BG_RATIO = 0.25;
+  let bgMode = false;
+  renderer.setPixelRatio(heroRatio);
   renderer.setClearColor(0x05060a, 1);
 
   const scene = new THREE.Scene();
@@ -200,7 +205,7 @@ async function initOrb() {
   };
 
   // core orb
-  const detail = innerWidth < 760 ? 28 : 48;
+  const detail = innerWidth < 760 ? 18 : 30;
   const core = new THREE.Mesh(
     new THREE.IcosahedronGeometry(1, detail),
     new THREE.ShaderMaterial({ vertexShader: ORB_VERT, fragmentShader: ORB_FRAG, uniforms })
@@ -219,7 +224,7 @@ async function initOrb() {
   spin.add(shell);
 
   // particle halo
-  const N = innerWidth < 760 ? 1400 : 3200;
+  const N = innerWidth < 760 ? 900 : 1800;
   const pos = new Float32Array(N * 3);
   const seed = new Float32Array(N);
   for (let i = 0; i < N; i++) {
@@ -273,7 +278,7 @@ async function initOrb() {
   root.add(glow);
 
   // background starfield (parallax)
-  const SN = innerWidth < 760 ? 700 : 1600;
+  const SN = innerWidth < 760 ? 400 : 900;
   const sp = new Float32Array(SN * 3);
   const ss = new Float32Array(SN);
   for (let i = 0; i < SN; i++) {
@@ -332,9 +337,31 @@ async function initOrb() {
   const speed = reduced ? 0.25 : 1;
   let rotX = 0, rotY = 0;
 
-  function frame() {
+  // frame pacing: 30fps behind sections, full rate in the hero; adaptive resolution if the hero runs slow
+  let lastRender = 0, slowFrames = 0, sampled = 0;
+  function setBg(on) {
+    if (on === bgMode) return;
+    bgMode = on;
+    // fine detail (points, wireframe, thin rings) turns blocky when upscaled, so only the smooth core + glow stay
+    halo.visible = shell.visible = stars.visible = !on;
+    rings.forEach((r) => { r.visible = !on; });
+    renderer.setPixelRatio(on ? BG_RATIO : heroRatio);
+    resize();
+  }
+  function frame(now) {
     requestAnimationFrame(frame);
     if (document.hidden) return;
+    if (bgMode && now - lastRender < 32) return;
+    const gap = now - lastRender;
+    lastRender = now;
+    if (!bgMode && heroRatio > 0.75 && lastRender > 2000) {
+      sampled++;
+      if (gap > 24) slowFrames++;
+      if (sampled >= 90) {
+        if (slowFrames > 30) { heroRatio = Math.max(0.75, heroRatio - 0.25); renderer.setPixelRatio(heroRatio); resize(); }
+        sampled = 0; slowFrames = 0;
+      }
+    }
     const dt = Math.min(clock.getDelta(), 0.05);
     t += dt * speed;
     uniforms.uTime.value = t;
@@ -376,10 +403,10 @@ async function initOrb() {
 
     renderer.render(scene, camera);
   }
-  frame();
+  requestAnimationFrame(frame);
 
   return {
-    go(name) { setPreset(name); },
+    go(name) { setPreset(name); setBg(name !== 'home'); },
     pulse(v = 1) { state.pulse = Math.max(state.pulse, v); },
     refresh() { setPreset(state.phase === 'loading' ? 'loading' : state.section); },
   };
