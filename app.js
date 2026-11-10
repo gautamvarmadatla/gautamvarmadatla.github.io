@@ -113,6 +113,7 @@ uniform vec3 uC;
 uniform float uTime;
 uniform float uDim;
 uniform float uAlpha;
+uniform float uSoft;
 varying vec3 vNormal;
 varying vec3 vView;
 varying float vNoise;
@@ -123,7 +124,10 @@ void main(){
   float bands = 0.5 + 0.5 * sin(vNoise * 16.0 + uTime * 1.2);
   col += uB * bands * 0.08;
   col *= (0.8 + fres * 1.3) * uDim;
-  gl_FragColor = vec4(col, uAlpha);
+  float facing = max(dot(normalize(vNormal), normalize(vView)), 0.0);
+  col = mix(col, (uA + uB) * 0.6 * uDim, uSoft * 0.55);
+  float a = uAlpha * mix(1.0, smoothstep(0.0, 0.85, facing), uSoft);
+  gl_FragColor = vec4(col, a);
 }`;
 
 const PTS_VERT = /* glsl */`
@@ -177,7 +181,6 @@ async function initOrb() {
   // resolution and gets upscaled, which blurs it for free instead of a CSS blur filter.
   const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
   let heroRatio = dpr;
-  const BG_RATIO = 0.25;
   let bgMode = false;
   renderer.setPixelRatio(heroRatio);
   renderer.setClearColor(0x05060a, 1);
@@ -199,6 +202,7 @@ async function initOrb() {
     uShell: { value: 0 },
     uDim: { value: 1 },
     uAlpha: { value: 1 },
+    uSoft: { value: 0 },
     uA: { value: new THREE.Color(P0.c[0]) },
     uB: { value: new THREE.Color(P0.c[1]) },
     uC: { value: new THREE.Color(P0.c[2]) },
@@ -208,12 +212,12 @@ async function initOrb() {
   const detail = innerWidth < 760 ? 18 : 30;
   const core = new THREE.Mesh(
     new THREE.IcosahedronGeometry(1, detail),
-    new THREE.ShaderMaterial({ vertexShader: ORB_VERT, fragmentShader: ORB_FRAG, uniforms })
+    new THREE.ShaderMaterial({ vertexShader: ORB_VERT, fragmentShader: ORB_FRAG, uniforms, transparent: true })
   );
   spin.add(core);
 
   // wireframe shell — shares colours/time but pushed outward
-  const shellUniforms = { ...uniforms, uShell: { value: 0.32 }, uAlpha: { value: 0.18 }, uAmp: { value: P0.amp * 0.6 } };
+  const shellUniforms = { ...uniforms, uSoft: { value: 0 }, uShell: { value: 0.32 }, uAlpha: { value: 0.18 }, uAmp: { value: P0.amp * 0.6 } };
   const shell = new THREE.Mesh(
     new THREE.IcosahedronGeometry(1, 6),
     new THREE.ShaderMaterial({
@@ -322,7 +326,8 @@ async function initOrb() {
     // half-width of the visible plane at z=0; side sections pin the orb's centre to the screen edge
     const halfW = Math.tan((camera.fov * Math.PI) / 360) * camera.position.z * camera.aspect;
     const edge = name !== 'home' && name !== 'loading';
-    tgt.x = mobile ? 0 : edge ? Math.sign(p.x) * halfW * 0.97 : halfW * 0.58;
+    // always exit to the right edge (same side as the hero orb) so it never sweeps across the text
+    tgt.x = mobile ? 0 : edge ? halfW * 0.97 : halfW * 0.58;
     tgt.y = mobile ? (name === 'home' ? 0.9 : p.y * 0.5) : p.y;
     tgt.s = mobile ? p.s * 0.75 : p.s;
     tgt.amp = p.amp;
@@ -337,24 +342,17 @@ async function initOrb() {
   const speed = reduced ? 0.25 : 1;
   let rotX = 0, rotY = 0;
 
-  // frame pacing: 30fps behind sections, full rate in the hero; adaptive resolution if the hero runs slow
+  // Behind sections the orb softens in-shader and its fine detail fades out; nothing switches instantly.
+  // Adaptive resolution steps down if frames run slow.
   let lastRender = 0, slowFrames = 0, sampled = 0;
-  function setBg(on) {
-    if (on === bgMode) return;
-    bgMode = on;
-    // fine detail (points, wireframe, thin rings) turns blocky when upscaled, so only the smooth core + glow stay
-    halo.visible = shell.visible = stars.visible = !on;
-    rings.forEach((r) => { r.visible = !on; });
-    renderer.setPixelRatio(on ? BG_RATIO : heroRatio);
-    resize();
-  }
+  let mix = 0; // 0 = hero, 1 = background
+  function setBg(on) { bgMode = on; }
   function frame(now) {
     requestAnimationFrame(frame);
     if (document.hidden) return;
-    if (bgMode && now - lastRender < 32) return;
     const gap = now - lastRender;
     lastRender = now;
-    if (!bgMode && heroRatio > 0.75 && lastRender > 2000) {
+    if (heroRatio > 0.75 && lastRender > 2000) {
       sampled++;
       if (gap > 24) slowFrames++;
       if (sampled >= 90) {
@@ -369,8 +367,20 @@ async function initOrb() {
 
     // ease toward targets
     const k = 1 - Math.pow(0.0015, dt);       // framerate-independent smoothing
-    root.position.x = lerp(root.position.x, tgt.x, k);
-    root.position.y = lerp(root.position.y, tgt.y - state.scrollVel * 0.002, k);
+    const kMove = 1 - Math.pow(0.06, dt);     // slower, gliding movement between sections
+    root.position.x = lerp(root.position.x, tgt.x, kMove);
+    root.position.y = lerp(root.position.y, tgt.y - state.scrollVel * 0.002, kMove);
+
+    // hero <-> background crossfade
+    mix = lerp(mix, bgMode ? 1 : 0, 1 - Math.pow(0.08, dt));
+    uniforms.uSoft.value = mix;
+    shellUniforms.uAlpha.value = 0.18 * (1 - mix);
+    pUniforms.uOpacity.value = 0.9 * (1 - mix);
+    ringMat.opacity = 0.35 * (1 - mix);
+    stars.material.uniforms.uOpacity.value = 0.55 * (1 - mix * 0.7);
+    const detail = mix < 0.995;
+    shell.visible = halo.visible = detail;
+    rings.forEach((r) => { r.visible = detail; });
     introScale = lerp(introScale, 1, 1 - Math.pow(0.02, dt));
     const sc = lerp(root.scale.x, tgt.s * introScale * (1 + state.pulse * 0.08), k);
     root.scale.setScalar(Math.max(sc, 0.001));
@@ -383,9 +393,9 @@ async function initOrb() {
     state.pulse *= Math.pow(0.08, dt);
     state.scrollVel *= Math.pow(0.02, dt);
 
-    uniforms.uA.value.lerp(tgt.a, k);
-    uniforms.uB.value.lerp(tgt.b, k);
-    uniforms.uC.value.lerp(tgt.c, k);
+    uniforms.uA.value.lerp(tgt.a, kMove);
+    uniforms.uB.value.lerp(tgt.b, kMove);
+    uniforms.uC.value.lerp(tgt.c, kMove);
     pUniforms.uColor.value.copy(uniforms.uB.value);
     ringMat.color.copy(uniforms.uC.value);
     glowMat.color.copy(uniforms.uB.value);
